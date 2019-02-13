@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parsing_on_.net.Logic.LetyShops;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,23 +9,28 @@ namespace Parsing_on_.net.Controllers
 {
     public class HomeController : Controller
     {
+
+        LetyShopsParser letyShopsParser = new LetyShopsParser();
+
+
         public ActionResult Index()
         {
-            return View();
+            var result = letyShopsParser.Parsing();
+            return View(result);
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Your application description page.";
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your contact page.";
 
-            return View();
-        }
+        //    return View();
+        //}
     }
 }
