@@ -11,5 +11,7 @@ namespace Parsing_on_.net.DAL
     {
         void AddShops(List<Shop> shops);
         List<Shop> GetShops();
+        void AddTimers(Timer timer);
+        List<Timer> GetTimers();
     }
 }

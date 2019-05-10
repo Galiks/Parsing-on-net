@@ -1,12 +1,7 @@
-﻿using ClosedXML.Excel;
-using Ninject;
-using Parsing_on_.net.BLL;
+﻿using Parsing_on_.net.BLL;
 using Parsing_on_.net.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Parsing_on_.net.Controllers
@@ -20,6 +15,7 @@ namespace Parsing_on_.net.Controllers
 
         public ActionResult Index(string action)
         {
+            Shops = parsingLogic.GetShops();
             if (action.Equals("update"))
             {
                 ParsingLogic.AddShop();
@@ -29,38 +25,64 @@ namespace Parsing_on_.net.Controllers
             }
             if (action.Equals("excel"))
             {
-                GetFile();
+                GetExcelFile();
             }
             if (action.Equals("csv"))
             {
-                return View(Shops);
+                GetCSVFile();
+            }
+            if (action.Equals("timer"))
+            {
+                GetTimerFile();
             }
             return View(Shops);
         }
 
-        public FileResult GetFile()
+        private void GetTimerFile()
         {
-            WriteFile();
-            // Путь к файлу
-            string file_path = Server.MapPath("~/Files/shops.xls");
-            // Тип файла - content-type
-            string file_type = "application/pdf/txt";
-            // Имя файла - необязательно
-            string file_name = "shops.xls";
-            return File(file_path, file_type, file_name);
+            string filePath = Server.MapPath("~/Files/timer.xlsx");
+            parsingLogic.CreateExcelFileForTimers(filePath);
+            FileInfo file = new FileInfo(filePath);
+            if (file.Exists)
+            {
+                Response.ClearContent();
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + file.Name);
+                Response.AddHeader("Content-Length", file.Length.ToString());
+                Response.ContentType = "text/plain";
+                Response.TransmitFile(file.FullName);
+                Response.End();
+            }
         }
 
-        private void WriteFile()
+        private void GetCSVFile()
         {
-            string file_path = Server.MapPath("~/Files/shops.xls");
-
-            using (StreamWriter file = new StreamWriter(file_path, false, System.Text.Encoding.Default))
+            string filePath = Server.MapPath(@"~/Files/shops.csv");
+            parsingLogic.CreateCSVFileForShops(filePath, Shops);
+            FileInfo file = new FileInfo(filePath);
+            if (file.Exists)
             {
-                var list = Shops;
-                foreach (var item in list)
-                {
-                    file.WriteLine($"{item.Name} {item.Discount}{item.Label} {item.Image} {item.URL}");
-                }
+                Response.ClearContent();
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + file.Name);
+                Response.AddHeader("Content-Length", file.Length.ToString());
+                Response.ContentType = "text/plain";
+                Response.TransmitFile(file.FullName);
+                Response.End();
+            }
+        }
+
+        private void GetExcelFile()
+        {
+            string filePath = Server.MapPath(@"~/Files/shops.xlsx");
+            parsingLogic.CreateExcelFileForShops(filePath, Shops);
+            FileInfo file = new FileInfo(filePath);
+            if (file.Exists)
+            {
+                Response.ClearContent();
+                Response.AddHeader("Content-Disposition", "attachment; filename=" + file.Name);
+                Response.AddHeader("Content-Length", file.Length.ToString());
+                Response.ContentType = "text/plain";
+                Response.TransmitFile(file.FullName);
+                Response.End();
             }
         }
     }

@@ -12,5 +12,9 @@ namespace Parsing_on_.net.BLL
         List<Shop> Parsing();
         bool AddShop();
         List<Shop> GetShops();
+        List<Timer> GetTimers();
+        bool CreateExcelFileForShops(string filePath, List<Shop> shops);
+        bool CreateCSVFileForShops(string filePath, List<Shop> shops);
+        bool CreateExcelFileForTimers(string filePath);
     }
 }

@@ -1,42 +1,55 @@
-﻿using System;
+﻿using NLog;
+using Parsing_on_.net.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using NLog;
-using Parsing_on_.net.Models;
 
 namespace Parsing_on_.net.DAL
 {
     public class ShopDAO : IShopDAO
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ShopContext shopContext = new ShopContext();
+
+        private static ShopContext ShopContext => shopContext;
+
+        static ShopDAO()
+        {
+            
+        }
+
         public void AddShops(List<Shop> shops)
         {
-            using (ShopContext shopContext = new ShopContext())
+            ShopContext.Database.EnsureDeleted();
+            ShopContext.Database.EnsureCreated();
+            foreach (var item in shops)
             {
-                shopContext.Database.Delete();
-                shopContext.Database.CreateIfNotExists();
-                foreach (var item in shops)
+                try
                 {
-                    try
-                    {
-                        shopContext.Shops.Add(item);
-                    }
-                    catch (Exception e)
-                    {
-                        logger.Error("Произошёл троллинг: " + e);
-                    }
+                    shopContext.Shops.Add(item);
                 }
-                shopContext.SaveChanges();
+                catch (Exception e)
+                {
+                    logger.Error("Произошёл троллинг: " + e);
+                }
             }
+            shopContext.SaveChanges();
+        }
+
+        public void AddTimers(Timer timer)
+        {
+            ShopContext.Timers.Add(timer);
+            ShopContext.SaveChanges();
         }
 
         public List<Shop> GetShops()
         {
-            using (ShopContext shopContext = new ShopContext())
-            {
-                return shopContext.Shops.ToList();
-            }
+            return ShopContext.Shops.ToList();
+        }
+
+        public List<Timer> GetTimers()
+        {
+            return ShopContext.Timers.ToList();
         }
     }
 }
