@@ -1,25 +1,45 @@
 ﻿@using Parsing_on_.net.Models;
 
 @model List<Shop>
-@{
-    ViewBag.Title = "Home Page";
-}
 
-<div>
-    @foreach (var item in Model)
-    {
-        <table border="1">
-            <tr>
-                <td>
-                    @item.Name
-                </td>
-                <td>
-                    @item.Discount@item.Label
-                </td>
-                <td>
-                    <img src="@item.Image" />
-                </td>
-            </tr>
-        </table>
-    }
-</div>
+<html>
+<head>
+    <meta name="viewport" content="width=divice-width" />
+    <title>Главный экран</title>
+</head>
+    <body>
+        <div>
+            @using (Html.BeginForm("Index", "Home"))
+            {
+                <button name="action" value="update">Обновить магазины</button>
+                <button name="action" value="excel">Скачать магазины в формате Excel</button>
+                <button name="action" value="csv">Скачать магазины в формате CSV</button>
+            }
+
+            <table border="1">
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+
+                        <tr>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                @item.Discount@item.Label
+                            </td>
+                            <td>
+                                <img src="@item.Image" />
+                            </td>
+                            <td>
+                                <a href="@item.URL">Ссылка на сайт</a>
+                            </td>
+                        </tr>
+
+                    }
+                }
+            </table>
+        </div>
+    </body>
+</html>
