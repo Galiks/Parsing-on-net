@@ -17,6 +17,7 @@ namespace Parsing_on_.net.BLL
 
         public bool AddShop()
         {
+            ShopDAO.DeleteAndCreateDatabase();
             var shops = Parsing();
             if (shops.Count > 0)
             {
@@ -78,7 +79,8 @@ namespace Parsing_on_.net.BLL
                 new CsQueryParsing(),
                 new FizzlerParsing(),
                 new HtmlAgilityPackParsing(),
-                new RestSharpParsing(),
+                new RestSharpForLetyShopsParsing(),
+                new WebDriverAndFizzlerMegaBonusParsing(),
                 new WebDriverParsing(),
             };
             List<Shop> shops = new List<Shop>();

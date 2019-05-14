@@ -400,7 +400,9 @@
     <Compile Include="BLL\Parsing Methods\CsQueryParsing.cs" />
     <Compile Include="BLL\Parsing Methods\FizzlerParsing.cs" />
     <Compile Include="BLL\Parsing Methods\HtmlAgilityPackParsing.cs" />
+    <Compile Include="BLL\Parsing Methods\RestSharpForLetyShopsParsing.cs" />
     <Compile Include="BLL\Parsing Methods\RestSharpParsing.cs" />
+    <Compile Include="BLL\Parsing Methods\WebDriverAndFizzlerMegaBonusParsing.cs" />
     <Compile Include="BLL\Parsing Methods\WebDriverParsing.cs" />
     <Compile Include="BLL\ParsingLogic.cs" />
     <Compile Include="Controllers\HomeController.cs" />

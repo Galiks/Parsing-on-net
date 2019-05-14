@@ -20,8 +20,6 @@ namespace Parsing_on_.net.DAL
 
         public void AddShops(List<Shop> shops)
         {
-            ShopContext.Database.EnsureDeleted();
-            ShopContext.Database.EnsureCreated();
             foreach (var item in shops)
             {
                 try
@@ -50,6 +48,12 @@ namespace Parsing_on_.net.DAL
         public List<Timer> GetTimers()
         {
             return ShopContext.Timers.ToList();
+        }
+
+        public void DeleteAndCreateDatabase()
+        {
+            ShopContext.Database.EnsureDeleted();
+            ShopContext.Database.EnsureCreated();
         }
     }
 }
