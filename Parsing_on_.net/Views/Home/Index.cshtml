@@ -17,30 +17,32 @@
                 <button name="action" value="timer">Скачать время парсинга</button>
             }
 
-            <table border="1">
-                @if (Model != null)
-                {
+            @if (Model != null)
+            {
+                <table border="1">
+
                     foreach (var item in Model)
                     {
 
-                        <tr>
-                            <td>
-                                @item.Name
-                            </td>
-                            <td>
-                                @item.Discount@item.Label
-                            </td>
-                            <td>
-                                <img src="@item.Image" />
-                            </td>
-                            <td>
-                                <a href="@item.URL">Ссылка на сайт</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Discount @item.Label
+                        </td>
+                        <td>
+                            <img src="@item.Image" />
+                        </td>
+                        <td>
+                            <a href="@item.URL">Ссылка на сайт</a>
+                        </td>
+                    </tr>
 
                     }
-                }
-            </table>
-        </div>
+
+                </table>
+            }
+            </div>
     </body>
 </html>
