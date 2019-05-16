@@ -15,8 +15,13 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const int _defaultPage = 30;
-        private List<Shop> shops = new List<Shop>();
+        private List<Shop> shops;
         private const string address = "https://letyshops.com";
+
+        public AngleSharpParsing()
+        {
+            this.shops = new List<Shop>();
+        }
 
         public List<Shop> Parsing()
         {
@@ -48,7 +53,10 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 string label = GetLabel(item);
                 string image = GetImage(item);
                 string url = GetUrl(item);
-                shops.Add(new Shop(name, discount, label, image, url));
+                if (!String.IsNullOrWhiteSpace(name) & !String.IsNullOrWhiteSpace(image) & !String.IsNullOrWhiteSpace(label) & !String.IsNullOrWhiteSpace(url) & !Double.IsNaN(discount))
+                {
+                    shops.Add(new Shop(name, discount, label, image, url));
+                }
             }
         }
 

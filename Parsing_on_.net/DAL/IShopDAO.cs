@@ -14,5 +14,6 @@ namespace Parsing_on_.net.DAL
         void AddTimers(Timer timer);
         List<Timer> GetTimers();
         void DeleteAndCreateDatabase();
+        void CreateShopContext();
     }
 }

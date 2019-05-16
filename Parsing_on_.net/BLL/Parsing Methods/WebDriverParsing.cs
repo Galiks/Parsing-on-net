@@ -16,7 +16,6 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
     public class WebDriverParsing : IParser
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger(); 
-        private IReadOnlyCollection<IWebElement> WebElements { get; set; }
 
         public List<Shop> Parsing()
         {
@@ -38,8 +37,8 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 }
             }
             var ul = driver.FindElement(By.ClassName("cacheback-block-list"));
-            WebElements = ul.FindElements(By.TagName("li"));
-            Parallel.ForEach(WebElements, WebElement =>
+            var webElements = ul.FindElements(By.TagName("li"));
+            Parallel.ForEach(webElements, WebElement =>
             {
                 var shop = ParseElements(WebElement);
                 if (shop != null)

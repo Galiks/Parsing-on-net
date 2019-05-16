@@ -11,20 +11,20 @@ namespace Parsing_on_.net.BLL
     public class ParsingLogic : IParsingLogic
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly ShopDAO _shopDAO = new ShopDAO();
 
-        public static ShopDAO ShopDAO => _shopDAO;
+        private ShopDAO shopDAO;
 
-        public bool AddShop()
+        public ShopDAO ShopDAO { get => shopDAO; set => shopDAO = value; }
+
+        public ParsingLogic()
+        {
+            ShopDAO = new ShopDAO();
+        }
+
+        public void AddShop()
         {
             ShopDAO.DeleteAndCreateDatabase();
-            var shops = Parsing();
-            if (shops.Count > 0)
-            {
-                ShopDAO.AddShops(shops);
-                return true;
-            }
-            return false;
+            Parsing();
         }
 
         public bool CreateCSVFileForShops(string filePath, List<Shop> shops)
@@ -71,7 +71,7 @@ namespace Parsing_on_.net.BLL
             return ShopDAO.GetTimers();
         }
 
-        public List<Shop> Parsing()
+        public void Parsing()
         {
             List<IParser> parsers = new List<IParser>()
             {
@@ -87,12 +87,14 @@ namespace Parsing_on_.net.BLL
             foreach (var item in parsers)
             {
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                shops.AddRange(item.Parsing());
+                shops = item.Parsing();
                 watch.Stop();
                 ShopDAO.AddTimers(new Timer(item.GetType().Name, watch.ElapsedMilliseconds, DateTime.Now.ToString()));
+                if (shops.Count > 0)
+                {
+                    ShopDAO.AddShops(shops); 
+                }
             }
-            return shops;
-
         }
     }
 }

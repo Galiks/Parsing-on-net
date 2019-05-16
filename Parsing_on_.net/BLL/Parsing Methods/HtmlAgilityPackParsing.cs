@@ -21,15 +21,14 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         private const string addressOfSiteForParsing = "https://letyshops.com/shops?page=";
         private const string addressOfSite = "https://letyshops.com";
 
-        internal List<Shop> Shops { get; set; }
-
         public HtmlAgilityPackParsing()
         {
-            Shops = new List<Shop>();
+            
         }
 
         public List<Shop> Parsing()
         {
+            List<Shop> shops = new List<Shop>();
             logger.Info("Начался парсинг " + typeof(HtmlAgilityPackParsing).Name);
             for (int i = 1; i <= GetMaxPage(); i++)
             {
@@ -44,12 +43,12 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                     var shop = ParseElements(node);
                     if (shop != null)
                     {
-                        Shops.Add(shop);
+                        shops.Add(shop);
                     }
                 });
             }
 
-            return Shops;
+            return shops;
         }
 
         private Shop ParseElements(HtmlNode item)

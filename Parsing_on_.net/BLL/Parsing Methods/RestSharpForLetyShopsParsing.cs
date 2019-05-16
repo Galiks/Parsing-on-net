@@ -86,6 +86,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             }
             catch (NullReferenceException e)
             {
+                
                 discount = html.QuerySelector("div.b-teaser__caption > div.b-teaser__cashback-rate > div > div > span.b-shop-teaser__new-cash").InnerText.Trim(); ;
             }
             if (Double.TryParse(discount.Replace('.', ','), out double result))

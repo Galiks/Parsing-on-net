@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using Microsoft.EntityFrameworkCore;
+using NLog;
 using Parsing_on_.net.Models;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,12 @@ namespace Parsing_on_.net.DAL
     public class ShopDAO : IShopDAO
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly ShopContext shopContext = new ShopContext();
 
-        private static ShopContext ShopContext => shopContext;
+        private ShopContext ShopContext { get; set; }
 
-        static ShopDAO()
+        public ShopDAO()
         {
-            
+            CreateShopContext();
         }
 
         public void AddShops(List<Shop> shops)
@@ -24,20 +24,27 @@ namespace Parsing_on_.net.DAL
             {
                 try
                 {
-                    shopContext.Shops.Add(item);
+                    ShopContext.Shops.Add(item);
+                    ShopContext.SaveChanges();
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Произошёл троллинг: " + e);
+                    logger.Error("Произошла ошибка : " + e);
                 }
             }
-            shopContext.SaveChanges();
         }
 
         public void AddTimers(Timer timer)
         {
-            ShopContext.Timers.Add(timer);
-            ShopContext.SaveChanges();
+            try
+            {
+                ShopContext.Timers.Add(timer);
+                ShopContext.SaveChanges();
+            }
+            catch (Exception e )
+            {
+                logger.Error("Произошла ошибка : " + e);
+            }
         }
 
         public List<Shop> GetShops()
@@ -54,6 +61,11 @@ namespace Parsing_on_.net.DAL
         {
             ShopContext.Database.EnsureDeleted();
             ShopContext.Database.EnsureCreated();
+        }
+
+        public void CreateShopContext()
+        {
+            ShopContext = new ShopContext();
         }
     }
 }

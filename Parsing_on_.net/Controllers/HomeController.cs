@@ -8,14 +8,14 @@ namespace Parsing_on_.net.Controllers
 {
     public class HomeController : Controller
     {
-        private static readonly ParsingLogic parsingLogic = new ParsingLogic();
-        public static ParsingLogic ParsingLogic => parsingLogic;
-
+        private ParsingLogic parsingLogic;
         public static List<Shop> Shops { get; set; }
+        public ParsingLogic ParsingLogic { get => parsingLogic; set => parsingLogic = value; }
 
         public ActionResult Index(string action)
         {
-            Shops = parsingLogic.GetShops();
+            ParsingLogic = new ParsingLogic();
+            Shops = ParsingLogic.GetShops();
             if (action.Equals("update"))
             {
                 ParsingLogic.AddShop();
@@ -41,7 +41,7 @@ namespace Parsing_on_.net.Controllers
         private void GetTimerFile()
         {
             string filePath = Server.MapPath("~/Files/timer.xlsx");
-            parsingLogic.CreateExcelFileForTimers(filePath);
+            ParsingLogic.CreateExcelFileForTimers(filePath);
             FileInfo file = new FileInfo(filePath);
             if (file.Exists)
             {
@@ -57,7 +57,7 @@ namespace Parsing_on_.net.Controllers
         private void GetCSVFile()
         {
             string filePath = Server.MapPath(@"~/Files/shops.csv");
-            parsingLogic.CreateCSVFileForShops(filePath, Shops);
+            ParsingLogic.CreateCSVFileForShops(filePath, Shops);
             FileInfo file = new FileInfo(filePath);
             if (file.Exists)
             {
@@ -73,7 +73,7 @@ namespace Parsing_on_.net.Controllers
         private void GetExcelFile()
         {
             string filePath = Server.MapPath(@"~/Files/shops.xlsx");
-            parsingLogic.CreateExcelFileForShops(filePath, Shops);
+            ParsingLogic.CreateExcelFileForShops(filePath, Shops);
             FileInfo file = new FileInfo(filePath);
             if (file.Exists)
             {

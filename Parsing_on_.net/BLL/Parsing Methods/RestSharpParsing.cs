@@ -80,7 +80,14 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             var shopUrl = GetUrl(jToken);
             var discount = GetDiscount(jToken);
             var label = GetLabel(jToken);
-            return new Shop(name, discount, label, image, shopUrl);
+            if (!String.IsNullOrWhiteSpace(name) & !String.IsNullOrWhiteSpace(image) & !String.IsNullOrWhiteSpace(label) & !String.IsNullOrWhiteSpace(shopUrl) & !Double.IsNaN(discount))
+            {
+                return new Shop(name, discount, label, image, shopUrl);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private String GetName(JToken token)

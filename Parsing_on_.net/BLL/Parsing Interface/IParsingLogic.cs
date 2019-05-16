@@ -9,8 +9,8 @@ namespace Parsing_on_.net.BLL
 {
     public interface IParsingLogic
     {
-        List<Shop> Parsing();
-        bool AddShop();
+        void Parsing();
+        void AddShop();
         List<Shop> GetShops();
         List<Timer> GetTimers();
         bool CreateExcelFileForShops(string filePath, List<Shop> shops);
