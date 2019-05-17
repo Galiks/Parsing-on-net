@@ -155,7 +155,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
 
         private int GetMaxPage()
         {
-            string pageUrl = GetUrl(addressOfSiteForMaxPage);
+            string pageUrl = GetHTML(addressOfSiteForMaxPage);
             var document = new HtmlDocument();
             document.LoadHtml(pageUrl);
             var maxPageString = document.DocumentNode.SelectSingleNode("//ul[@class='b-pagination js-pagination']/li[5]");
@@ -178,7 +178,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        private string GetUrl(string url)
+        private string GetHTML(string url)
         {
             string pageUrl = "";
             var request = (HttpWebRequest)WebRequest.Create(url);
