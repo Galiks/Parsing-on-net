@@ -45,7 +45,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             string page = "https://letyshops.com/shops?page=" + i;
             string html = webClient.DownloadString(page);
             HtmlParser parser = new HtmlParser();
-            var result = parser.ParseDocument(html).GetElementsByClassName("b-teaser");
+            var result = parser.ParseDocument(html).QuerySelectorAll("div.b-teaser-list > div.b-teaser > a");
             foreach (var item in result)
             {
                 var name = GetName(item);
@@ -62,17 +62,22 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
 
         private string GetUrl(AngleSharp.Dom.IElement item)
         {
-            return address + item.GetElementsByClassName("b-teaser__inner").First().GetAttribute("href");
+            return address + item.GetAttribute("href");
         }
 
         private string GetImage(AngleSharp.Dom.IElement item)
         {
-            return item.GetElementsByClassName("b-teaser__cover").First().GetElementsByTagName("img").First().GetAttribute("src");
+            return item.QuerySelector("div.b-teaser__top > div.b-teaser__cover > img").GetAttribute("src");
         }
 
         private string GetLabel(AngleSharp.Dom.IElement item)
         {
-            return item.GetElementsByClassName("b-shop-teaser__label ").Last().InnerHtml;
+            var label = item.QuerySelector("div.b-teaser__caption > div.b-teaser__cashback-rate > div > div > span.b-shop-teaser__label").TextContent;
+            if (label == null)
+            {
+                label = item.QuerySelector("div.b-teaser__caption > div.b-teaser__cashback-rate > div > div > span.b-shop-teaser__label.b-shop-teaser__label--red").TextContent;
+            }
+            return label;
         }
 
         private double GetDiscount(AngleSharp.Dom.IElement item)
@@ -81,12 +86,12 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             var discounts = item.GetElementsByClassName("b-shop-teaser__cash");
             if (discounts.Count() == 0)
             {
-                string temp = item.GetElementsByClassName("b-shop-teaser__new-cash").First().InnerHtml;
+                string temp = item.GetElementsByClassName("b-shop-teaser__new-cash").First().TextContent;
                 discount = Double.Parse(temp, CultureInfo.InvariantCulture);
             }
             else
             {
-                string temp = item.GetElementsByClassName("b-shop-teaser__cash").First().InnerHtml;
+                string temp = item.GetElementsByClassName("b-shop-teaser__cash").First().TextContent;
                 discount = Double.Parse(temp, CultureInfo.InvariantCulture);
             }
 
@@ -105,7 +110,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             var result = parser.ParseDocument(html).GetElementsByClassName("b-pagination__link");
             try
             {
-                if (Int32.TryParse(result.Last().InnerHtml, out int page))
+                if (Int32.TryParse(result.Last().TextContent, out int page))
                 {
                     return page;
                 }

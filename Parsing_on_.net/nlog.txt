@@ -10576,3 +10576,18 @@
    в OpenQA.Selenium.By.FindElement(ISearchContext context)
    в OpenQA.Selenium.Remote.RemoteWebElement.FindElement(By by)
    в Parsing_on_.net.BLL.Parsing_Methods.WebDriverParsing.GetPage(IWebElement element) в E:\Programs\Projects Visual Studio\Galiks\Parsing-on-net\Parsing_on_.net\BLL\Parsing Methods\WebDriverParsing.cs:строка 73
+2019/05/18 03:40:35.012|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:40:35.012|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:40:35.012|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:51:09.341|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:51:09.341|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:51:09.341|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:53:43.836|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:53:43.836|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:53:43.836|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:54:37.896|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:54:37.896|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:54:37.896|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:55:48.701|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:55:48.701|Info|Начался парсинг AngleSharpParsing
+2019/05/18 03:55:48.701|Info|Начался парсинг AngleSharpParsing

@@ -76,12 +76,12 @@ namespace Parsing_on_.net.BLL
             List<IParser> parsers = new List<IParser>()
             {
                 new AngleSharpParsing(),
-                new CsQueryParsing(),
-                new FizzlerParsing(),
-                new HtmlAgilityPackParsing(),
-                new RestSharpForLetyShopsParsing(),
-                new WebDriverAndFizzlerMegaBonusParsing(),
-                new WebDriverParsing(),
+                //new CsQueryParsing(),
+                //new FizzlerParsing(),
+                //new HtmlAgilityPackParsing(),
+                //new RestSharpForLetyShopsParsing(),
+                //new WebDriverAndFizzlerMegaBonusParsing(),
+                //new WebDriverParsing(),
             };
             List<Shop> shops = new List<Shop>();
             foreach (var item in parsers)

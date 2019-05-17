@@ -20,10 +20,14 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         private const string addressOfSiteForMaxPage = "https://letyshops.com/shops?page=1";
         private const string addressOfSiteForParsing = "https://letyshops.com/shops?page=";
         private const string addressOfSite = "https://letyshops.com";
+        private HtmlWeb htmlWeb;
 
         public HtmlAgilityPackParsing()
         {
-            
+            htmlWeb = new HtmlWeb
+            {
+                OverrideEncoding = Encoding.UTF8
+            };
         }
 
         public List<Shop> Parsing()
@@ -32,10 +36,6 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             logger.Info("Начался парсинг " + typeof(HtmlAgilityPackParsing).Name);
             for (int i = 1; i <= GetMaxPage(); i++)
             {
-                var htmlWeb = new HtmlWeb
-                {
-                    OverrideEncoding = Encoding.UTF8
-                };
                 var document = htmlWeb.Load(addressOfSiteForParsing + i);
                 var nodes = document.DocumentNode.SelectNodes("*//a[@class='b-teaser__inner']");
                 Parallel.ForEach(nodes, node =>
@@ -155,9 +155,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
 
         private int GetMaxPage()
         {
-            string pageUrl = GetHTML(addressOfSiteForMaxPage);
-            var document = new HtmlDocument();
-            document.LoadHtml(pageUrl);
+            var document = htmlWeb.Load(addressOfSiteForMaxPage);
             var maxPageString = document.DocumentNode.SelectSingleNode("//ul[@class='b-pagination js-pagination']/li[5]");
             if (maxPageString == null)
             {
@@ -174,7 +172,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         }
 
         /// <summary>
-        /// Возвращает url сайта
+        /// Возвращает html сайта
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
