@@ -2,6 +2,7 @@
 using NLog;
 using Parsing_on_.net.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -15,12 +16,12 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const int _defaultPage = 30;
-        private List<Shop> shops;
+        private ConcurrentBag<Shop> shops;
         private const string address = "https://letyshops.com";
 
         public AngleSharpParsing()
         {
-            this.shops = new List<Shop>();
+            this.shops = new ConcurrentBag<Shop>();
         }
 
         public List<Shop> Parsing()
@@ -31,9 +32,9 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 Encoding = Encoding.UTF8
             };
             var html = webClient.DownloadString("https://letyshops.com/shops?page=1");
-            var tewt = GetMaxPage(html);
-            Parallel.For(1, GetMaxPage(html) + 1, ParseElements);
-            return shops;
+            var maxPage = GetMaxPage(html);
+            Parallel.For(1, maxPage + 1, ParseElements);
+            return shops.ToList();
         }
 
         private void ParseElements(int i)
@@ -53,7 +54,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 string label = GetLabel(item);
                 string image = GetImage(item);
                 string url = GetUrl(item);
-                if (!String.IsNullOrWhiteSpace(name) & !String.IsNullOrWhiteSpace(image) & !String.IsNullOrWhiteSpace(label) & !String.IsNullOrWhiteSpace(url) & !Double.IsNaN(discount))
+                if (!(String.IsNullOrEmpty(name) || Double.IsNaN(discount) || String.IsNullOrEmpty(label) || String.IsNullOrEmpty(image) || String.IsNullOrEmpty(url)))
                 {
                     shops.Add(new Shop(name, discount, label, image, url));
                 }
@@ -72,11 +73,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
 
         private string GetLabel(AngleSharp.Dom.IElement item)
         {
-            var label = item.QuerySelector("div.b-teaser__caption > div.b-teaser__cashback-rate > div > div > span.b-shop-teaser__label").TextContent;
-            if (label == null)
-            {
-                label = item.QuerySelector("div.b-teaser__caption > div.b-teaser__cashback-rate > div > div > span.b-shop-teaser__label.b-shop-teaser__label--red").TextContent;
-            }
+            var label = item.QuerySelectorAll("div.b-teaser__caption > div.b-teaser__cashback-rate > div > div > span.b-shop-teaser__label ").Last().TextContent;
             return label;
         }
 

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Fizzler.Systems.HtmlAgilityPack;
 using NLog;
+using System.Collections.Concurrent;
 
 namespace Parsing_on_.net.BLL.Parsing_Methods
 {
@@ -18,18 +19,18 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         private const string addressOfSiteForParsing = "https://letyshops.com/shops?page=";
         private const string addressOfSite = "https://letyshops.com";
 
-        private List<Shop> Shops { get; set; }
+        private ConcurrentBag<Shop> Shops { get; set; }
 
         public FizzlerParsing()
         {
-            Shops = new List<Shop>();
+            Shops = new ConcurrentBag<Shop>();
         }
 
         public List<Shop> Parsing()
         {
             logger.Info("Начался парсинг " + typeof(FizzlerParsing).Name);
             Parallel.For(1, GetMaxPage() + 1, ParseElements);
-            return Shops;
+            return Shops.ToList();
         }
 
         private void ParseElements(int i)
@@ -40,7 +41,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             };
             var document = htmlWeb.Load(addressOfSiteForParsing + i);
             var html = document.DocumentNode;
-            var listOfShops = html.QuerySelectorAll("div.b-teaser > a");
+            var listOfShops = html.QuerySelectorAll("div.b-teaser > a.b-teaser__inner");
             foreach (var item in listOfShops)
             {
                 String name = GetName(item);
@@ -48,7 +49,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 String label = GetLabel(item);
                 String url = GetUrl(item);
                 String image = GetImage(item);
-                if (name != null && !Double.IsNaN(discount) && label != null && url != null && image != null)
+                if (!(String.IsNullOrEmpty(name) || Double.IsNaN(discount) || String.IsNullOrEmpty(label) || String.IsNullOrEmpty(image) || String.IsNullOrEmpty(url)))
                 {
                     Shops.Add(new Shop(name, discount, label, image, url));
                 }

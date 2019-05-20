@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,17 +16,17 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
     {
         private const string addressOfSiteForParsing = "https://letyshops.com/shops?page=";
 
-        private List<Shop> Shops { get; set; }
+        private ConcurrentBag<Shop> Shops { get; set; }
 
         public RestSharpForLetyShopsParsing()
         {
-            Shops = new List<Shop>();
+            Shops = new ConcurrentBag<Shop>();
         }
 
         public List<Shop> Parsing()
         {
             Parallel.For(1, GetMaxPage() + 1, ParseElements);
-            return Shops;
+            return Shops.ToList();
         }
 
         private void ParseElements(int i)
@@ -49,7 +50,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 String label = GetLabel(item);
                 String url = GetUrl(item);
                 String image = GetImage(item);
-                if (name != null && !Double.IsNaN(discount) && label != null && url != null && image != null)
+                if (!(String.IsNullOrEmpty(name) || Double.IsNaN(discount) || String.IsNullOrEmpty(label) || String.IsNullOrEmpty(image) || String.IsNullOrEmpty(url)))
                 {
                     Shops.Add(new Shop(name, discount, label, image, url));
                 }

@@ -58,7 +58,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             var label = GetLabel(fullDiscount);
             var image = GetImage(item);
             var url = GetPage(item);
-            if (name != null && !Double.IsNaN(discount) && label != null && image != null && url != null)
+            if (!(String.IsNullOrEmpty(name) || Double.IsNaN(discount) || String.IsNullOrEmpty(label) || String.IsNullOrEmpty(image) || String.IsNullOrEmpty(url)))
             {
                 return new Shop(name, discount, label, image, url);
             }

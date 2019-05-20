@@ -2,8 +2,10 @@
 using NLog;
 using Parsing_on_.net.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Parsing_on_.net.BLL.Parsing_Methods
@@ -11,19 +13,21 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
     public class CsQueryParsing : IParser
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const string address = "https://letyshops.com/shops?page=";
         private readonly int defaultMaxpage = 20;
-        private List<Shop> Shops { get; set; }
+        private ConcurrentBag<Shop> Shops { get; set; }
         public CsQueryParsing()
         {
-            Shops = new List<Shop>();
+            Shops = new ConcurrentBag<Shop>();
         }
 
         public List<Shop> Parsing()
         {
             logger.Info("Начался парсинг " + typeof(CsQueryParsing).Name);
+            var maxPage = GetMaxPage();
             for (int i = 1; i <= GetMaxPage(); i++)
             {
-                var document = CQ.CreateFromUrl("https://letyshops.com/shops?page=" + i);
+                var document = CQ.CreateFromUrl(address + i);
                 var domObjects = document["a.b-teaser__inner"];
                 Parallel.ForEach(domObjects, domObject =>
                 {
@@ -35,7 +39,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 });
             }
 
-            return Shops;
+            return Shops.ToList();
         }
 
         private Shop ParseElements(IDomObject domObject)
@@ -46,7 +50,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             string label = GetLabel(document);
             string image = GetImage(document);
             string url = GetUrl(domObject);
-            if (!String.IsNullOrWhiteSpace(name) & !String.IsNullOrWhiteSpace(image) & !String.IsNullOrWhiteSpace(label) & !String.IsNullOrWhiteSpace(url) & !Double.IsNaN(discount))
+            if (!(String.IsNullOrEmpty(name) || Double.IsNaN(discount) || String.IsNullOrEmpty(label) || String.IsNullOrEmpty(image) || String.IsNullOrEmpty(url)))
             {
                 return new Shop(name, discount, label, image, url);
             }
@@ -69,10 +73,6 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         private string GetLabel(CQ document)
         {
             string label = document["span.b-shop-teaser__label "].Last().Text().Trim();
-            if (String.IsNullOrWhiteSpace(label))
-            {
-                label = document["b-shop-teaser__label  b-shop-teaser__label--red "].First().Text().Trim();
-            }
             return label;
         }
 

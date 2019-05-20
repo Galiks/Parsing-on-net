@@ -75,8 +75,8 @@ namespace Parsing_on_.net.BLL
         {
             List<IParser> parsers = new List<IParser>()
             {
-                new AngleSharpParsing(),
-                //new CsQueryParsing(),
+                //new AngleSharpParsing(),
+                new CsQueryParsing(),
                 //new FizzlerParsing(),
                 //new HtmlAgilityPackParsing(),
                 //new RestSharpForLetyShopsParsing(),

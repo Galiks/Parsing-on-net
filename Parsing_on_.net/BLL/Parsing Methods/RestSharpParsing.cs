@@ -3,6 +3,7 @@ using NLog;
 using Parsing_on_.net.Models;
 using RestSharp;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +14,11 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
     public class RestSharpParsing : IParser
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        public List<Shop> Shops { get; set; }
+        public ConcurrentBag<Shop> Shops { get; set; }
 
         public RestSharpParsing()
         {
-            Shops = new List<Shop>();
+            Shops = new ConcurrentBag<Shop>();
         }
 
         public List<Shop> Parsing()
@@ -51,7 +52,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 }
             });
 
-            return Shops;
+            return Shops.ToList();
         }
 
         private JToken GetJSon(int i)
@@ -80,7 +81,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             var shopUrl = GetUrl(jToken);
             var discount = GetDiscount(jToken);
             var label = GetLabel(jToken);
-            if (!String.IsNullOrWhiteSpace(name) & !String.IsNullOrWhiteSpace(image) & !String.IsNullOrWhiteSpace(label) & !String.IsNullOrWhiteSpace(shopUrl) & !Double.IsNaN(discount))
+            if (!(String.IsNullOrEmpty(name) || Double.IsNaN(discount) || String.IsNullOrEmpty(label) || String.IsNullOrEmpty(image) || String.IsNullOrEmpty(shopUrl)))
             {
                 return new Shop(name, discount, label, image, shopUrl);
             }

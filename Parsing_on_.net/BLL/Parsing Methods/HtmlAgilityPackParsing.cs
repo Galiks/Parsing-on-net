@@ -2,6 +2,7 @@
 using NLog;
 using Parsing_on_.net.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -32,7 +33,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
 
         public List<Shop> Parsing()
         {
-            List<Shop> shops = new List<Shop>();
+            ConcurrentBag<Shop> shops = new ConcurrentBag<Shop>();
             logger.Info("Начался парсинг " + typeof(HtmlAgilityPackParsing).Name);
             for (int i = 1; i <= GetMaxPage(); i++)
             {
@@ -48,7 +49,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                 });
             }
 
-            return shops;
+            return shops.ToList();
         }
 
         private Shop ParseElements(HtmlNode item)
@@ -58,7 +59,7 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
             String label = GetLabel(item);
             String url = GetURL(item);
             String image = GetImage(item);
-            if (name != null & discount != Double.NaN & label != null & url != null & image != null)
+            if (!(String.IsNullOrEmpty(name) || Double.IsNaN(discount) || String.IsNullOrEmpty(label) || String.IsNullOrEmpty(image) || String.IsNullOrEmpty(url)))
             {
                 return new Shop(ConvertString(name), discount, label, image, url);
             }
