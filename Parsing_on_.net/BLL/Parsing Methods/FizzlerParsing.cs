@@ -29,7 +29,8 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         public List<Shop> Parsing()
         {
             logger.Info("Начался парсинг " + typeof(FizzlerParsing).Name);
-            Parallel.For(1, GetMaxPage() + 1, ParseElements);
+            var maxPage = GetMaxPage();
+            Parallel.For(1, maxPage + 1, ParseElements);
             return Shops.ToList();
         }
 

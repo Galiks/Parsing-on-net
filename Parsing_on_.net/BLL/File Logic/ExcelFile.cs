@@ -39,10 +39,16 @@ namespace Parsing_on_.net.BLL.File_Logic
                 worksheet.Cells["B" + index].Value = list[i].Time;
                 worksheet.Cells["C" + index].Value = list[i].Date;
             }
+
+            for (int i = 1; i <= 3; i++)
+            {
+                worksheet.Column(i).AutoFit();
+            }
         }
 
         private void Shops(List<Shop> list, ExcelWorksheet worksheet)
         {
+
             worksheet.Cells["A1"].Value = "НАЗВАНИЕ";
             worksheet.Cells["B1"].Value = "ЗНАЧЕНИЕ КЭШБЭКА";
             worksheet.Cells["C1"].Value = "ВАЛЮТА";
@@ -56,6 +62,11 @@ namespace Parsing_on_.net.BLL.File_Logic
                 worksheet.Cells["C" + index].Value = list[i].Label;
                 worksheet.Cells["D" + index].Value = list[i].Image;
                 worksheet.Cells["E" + index].Value = list[i].URL;
+            }
+
+            for (int i = 1; i <= 5; i++)
+            {
+                worksheet.Column(i).AutoFit();
             }
         }
     }
