@@ -18,7 +18,6 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
     public class WebDriverAndFizzlerMegaBonusParsing : IParser
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        //private IReadOnlyCollection<IWebElement> WebElements { get; set; }
 
         private const string Url = "https://megabonus.com/feed";
 

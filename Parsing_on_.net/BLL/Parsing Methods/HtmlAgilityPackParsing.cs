@@ -48,7 +48,6 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                     }
                 });
             }
-
             return shops.ToList();
         }
 
@@ -107,7 +106,6 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         private string GetLabel(HtmlNode node)
         {
             var label = "";
-
             //Почему сначала 4, а потом 3? Потому что если наоборот, то можно вытащить размер кэш-бэка, вместо лэйбла
             try
             {
@@ -181,7 +179,6 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
         {
             string pageUrl = "";
             var request = (HttpWebRequest)WebRequest.Create(url);
-
             using (var response = (HttpWebResponse)request.GetResponse())
             {
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -203,7 +200,6 @@ namespace Parsing_on_.net.BLL.Parsing_Methods
                     }
                 }
             }
-
             return pageUrl;
         }
 
